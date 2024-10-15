@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE classifications SYSTEM "classifications.dtd">
+
+<!--
+  * classifications.xml
+  *
+  * Copyright (c) 2024 Simon Fraser University
+  * Copyright (c) 2024 John Willinsky
+  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+  -->
+<classifications>
+    <field number="1" name="Natural Sciences">
+        <subfield number="1.1" name="Mathematics"/>
+        <subfield number="1.2" name="Computer and information sciences"/>
+        <subfield number="1.3" name="Physical sciences"/>
+        <subfield number="1.4" name="Chemical sciences"/>
+        <subfield number="1.5" name="Earth and related environmental sciences"/>
+        <subfield number="1.6" name="Biological sciences"/>
+        <subfield number="1.7" name="Other natural sciences"/>
+    </field>
+    <field number="2" name="Engineering and Technology">
+        <subfield number="2.1" name="Civil engineering"/>
+        <subfield number="2.2" name="Electrical engineering, electronic engineering, information engineering"/>
+        <subfield number="2.3" name="Mechanical engineering"/>
+        <subfield number="2.4" name="Chemical engineering"/>
+        <subfield number="2.5" name="Materials engineering"/>
+        <subfield number="2.6" name="Medical engineering"/>
+        <subfield number="2.7" name="Environmental engineering"/>
+        <subfield number="2.8" name="Environmental biotechnology"/>
+        <subfield number="2.9" name="Industrial Biotechnology"/>
+        <subfield number="2.10" name="Nano-technology"/>
+        <subfield number="2.11" name="Other engineering and technologies"/>
+    </field>
+    <field number="3" name="Medical and Health Sciences">
+        <subfield number="3.1" name="Basic medicine"/>
+        <subfield number="3.2" name="Clinical medicine"/>
+        <subfield number="3.3" name="Health sciences"/>
+        <subfield number="3.4" name="Health biotechnology"/>
+        <subfield number="3.5" name="Other medical sciences"/>
+    </field>
+    <field number="4" name="Agricultural Sciences">
+        <subfield number="4.1" name="Agriculture, forestry, and fisheries"/>
+        <subfield number="4.2" name="Animal and dairy science"/>
+        <subfield number="4.3" name="Veterinary science"/>
+        <subfield number="4.4" name="Agricultural biotechnology"/>
+        <subfield number="4.5" name="Other agricultural sciences"/>
+    </field>
+    <field number="5" name="Social Sciences">
+        <subfield number="5.1" name="Psychology"/>
+        <subfield number="5.2" name="Economics and business"/>
+        <subfield number="5.3" name="Educational sciences"/>
+        <subfield number="5.3" name="Sociology"/>
+        <subfield number="5.4" name="Law"/>
+        <subfield number="5.6" name="Political Science"/>
+        <subfield number="5.7" name="Social and economic geography"/>
+        <subfield number="5.8" name="Media and communications"/>
+        <subfield number="5.9" name="Other social sciences"/>
+    </field>
+    <field number="6" name="Humanities">
+        <subfield number="6.1" name="History and archaeology"/>
+        <subfield number="6.2" name="Languages and literature"/>
+        <subfield number="6.3" name="Philosophy, ethics and religion"/>
+        <subfield number="6.4" name="Art (arts, history of arts, performing arts, music)"/>
+        <subfield number="6.5" name="Other humanities"/>
+    </field>
+</classifications>

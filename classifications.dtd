@@ -1,0 +1,19 @@
+<!--
+  * classifications.dtd
+  *
+  * Copyright (c) 2024 Simon Fraser University
+  * Copyright (c) 2024 John Willinsky
+  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+  *
+  * DTD for Frascati clasifications
+  *
+  -->
+<!ELEMENT classifications (field+)>
+<!ELEMENT field (subfield+)>
+	<!ATTLIST field
+		name CDATA #REQUIRED
+		number CDATA #REQUIRED>
+<!ELEMENT subfield EMPTY>
+	<!ATTLIST subfield
+		name CDATA #REQUIRED
+		number CDATA #REQUIRED>
