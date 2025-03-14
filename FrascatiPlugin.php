@@ -16,6 +16,8 @@ use GuzzleHttp\Promise;
 use APP\core\Application;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
+use PKP\controlledVocab\ControlledVocab;
+use PKP\controlledVocab\ControlledVocabEntry;
 use PKP\submission\SubmissionKeywordDAO;
 
 class FrascatiPlugin extends GenericPlugin
@@ -27,7 +29,7 @@ class FrascatiPlugin extends GenericPlugin
 
     // Define which vocabularies are supported, and the languages in them
     const ALLOWED_VOCABS_AND_LANGS = [
-        SubmissionKeywordDAO::CONTROLLED_VOCAB_SUBMISSION_KEYWORD => ['en'],
+        ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_KEYWORD => ['en'],
     ];
 
 
@@ -50,11 +52,6 @@ class FrascatiPlugin extends GenericPlugin
         return $success;
     }
 
-    public function getActions($request, $actionArgs)
-    {
-        return parent::getActions($request, $actionArgs);
-    }
-
     public function getDisplayName()
     {
         return __('plugins.generic.frascati.displayName');
@@ -75,64 +72,34 @@ class FrascatiPlugin extends GenericPlugin
         return !!Application::get()->getRequest()->getContext();
     }
 
-    public function manage($args, $request)
-    {
-        return parent::manage($args, $request);
-    }
-
-    // Own methods
-
     /**
      * Public
      */
-
-    public function setData(string $hookName, array $args): bool
+    public function setData(string $hookName, string $vocab, ?string $term, string $locale, array &$data, &$entries, $illuminateRequest, $response, $request): bool
     {
-        $vocab = $args[0];
-        $term = $args[1];
-        $locale = $args[2];
-        $data = &$args[3];
-        $entries = &$args[4];
-        $illuminateRequest = $args[5];
-        $response = $args[6];
-        $request = $args[7];
-
         // Here we define which form field the plugin is triggered in.
         // You can also define the language is the specific field while some vocabularies might only work
         // with specific languages.
         // Note that the current development version of the core only supports extending Keywords.
         // However, this will be extended to other fields as well, like Discipline.
         if (!isset(self::ALLOWED_VOCABS_AND_LANGS[$vocab]) || !in_array($locale, self::ALLOWED_VOCABS_AND_LANGS[$vocab])) {
-            return false;
+            return Hook::CONTINUE;
         }
 
-        // We call the fetchData function will handle the interaction with the vocabulary
-        $resultData = $this->fetchData($term, $locale);
-
-        // We replace the vocabulary data coming from the OJS database with fetched data
-        // from the external vocabulary and only show those results as suggestions.
-        // If you want to show also suggestions from existing keywords in your own database
-        // this is where we can make that decision.
-
-        if (!$resultData) {
-            $data = [];
-            return false;
-        }
-
-        $data = $resultData;
-
-        return false;
+	// Only return suggestions from the vocabulary
+        $data = $this->fetchData($term, $locale);
+error_log(print_r($data,true));
+        return HOOK::CONTINUE;
     }
 
     /**
      * Private
      */
-
     private function fetchData(?string $term, string $locale): array
     {
         // You might want to consider sanitazing the search term before it is 
         // passed to an API or used to search within a local file
-        $termSanitized = $term ?? "";
+        $termSanitized = strtolower($term ?? '');
 
         // Here we can set the minimum length for the word that is used for the query
         if (strlen($termSanitized) < 3) {
@@ -146,11 +113,10 @@ class FrascatiPlugin extends GenericPlugin
             foreach ($fieldNode->getElementsByTagName('subfield') as $subfieldNode) {
                 $number = $subfieldNode->getAttribute('number');
                 $name = $subfieldNode->getAttribute('name');
-                if (strpos($name, $termSanitized) !== false) $classifications[] = [
-                    'term' => $name,
-                    'label' => $name,
-                    'uri' => $number,
-                    'service' => 'frascati',
+                if (strpos(strtolower($name), $termSanitized) !== false) $classifications[] = [
+                    'name' => $name,
+                    'source' => 'Frascati',
+                    'identifier' => $number,
                 ];
             }
         }
