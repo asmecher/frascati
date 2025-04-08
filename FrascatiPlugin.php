@@ -41,9 +41,6 @@ class FrascatiPlugin extends GenericPlugin
 
     public function register($category, $path, $mainContextId = null)
     {
-        if (Application::isUnderMaintenance()) {
-            return true;
-        }
         $success = parent::register($category, $path);
         if ($success && $this->getEnabled()) {
             // Add hook
