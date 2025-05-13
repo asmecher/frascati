@@ -45,9 +45,34 @@ class FrascatiPlugin extends GenericPlugin
         if ($success && $this->getEnabled()) {
             // Add hook
             Hook::add('API::vocabs::external', $this->setData(...));
+            Hook::add('Form::config::after', $this->addVocabularyToKeywordsField(...));
+
         }
         return $success;
     }
+
+     public function addVocabularyToKeywordsField($hookName, $args) {
+
+        if ($args[0]["id"] == 'metadata') {
+            // Find the keywords field
+            foreach ($args[0]["fields"] as $key => $field) {
+                if ($field["name"] == "keywords") {
+                    // Add the vocabulary field
+                    $jsonPath = dirname(__FILE__) . '/classifications.en.json';
+                    $args[0]["fields"][$key]["vocabularies"] = [
+                        [
+                            "locale" => "en",
+                            "addButtonLabel" => "Add Frascati Keywords",
+                            "title" => "Add Keywords from Frascati Taxonomy",
+                            "items" => json_decode(file_get_contents($jsonPath), true)["items"]
+                        ],
+                    ];
+                    break; // No need to continue once we found the field
+                }
+            }
+        }
+    }
+
 
     public function getDisplayName()
     {
