@@ -53,7 +53,8 @@ class FrascatiPlugin extends GenericPlugin
 
      public function addVocabularyToKeywordsField($hookName, $args) {
 
-        if ($args[0]["id"] == 'metadata') {
+        $formConfig = $args[0];
+        if ($formConfig["id"] == 'metadata' || $formConfig["id"] == 'titleAbstract') {
             // Find the keywords field
             foreach ($args[0]["fields"] as $key => $field) {
                 if ($field["name"] == "keywords") {
