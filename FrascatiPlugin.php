@@ -51,6 +51,41 @@ class FrascatiPlugin extends GenericPlugin
         return $success;
     }
 
+    /**
+    * Recursively remap a JSON-decoded items-tree so that each node becomes:
+    * [
+    *   'label' => <original name>,
+    *   'value' => <original node minus its 'items'>,
+    *   'items' => [ ...remapped children... ]    // only if there were children
+    * ]
+    *
+    * @param  array  $items  List of nodes
+    * @return array
+    */
+    function reshapeTree(array $items): array
+    {
+        $result = [];
+        foreach ($items as $node) {
+            // pull out & remove any children
+            $children = $node['items'] ?? [];
+            unset($node['items']);
+    
+            // build the new node
+            $newNode = [
+                'label' => $node['name'],
+                'value' => $node,
+            ];
+    
+            // recurse if needed
+            if (!empty($children)) {
+                $newNode['items'] = $this->reshapeTree($children);
+            }
+    
+            $result[] = $newNode;
+        }
+        return $result;
+    }
+
      public function addVocabularyToKeywordsField($hookName, $args) {
 
         $formConfig = $args[0];
@@ -58,14 +93,16 @@ class FrascatiPlugin extends GenericPlugin
             // Find the keywords field
             foreach ($args[0]["fields"] as $key => $field) {
                 if ($field["name"] == "keywords") {
+
                     // Add the vocabulary field
                     $jsonPath = dirname(__FILE__) . '/classifications.en.json';
+                    $itemsOriginal= json_decode(file_get_contents($jsonPath), true)["items"];
                     $args[0]["fields"][$key]["vocabularies"] = [
                         [
                             "locale" => "en",
                             "addButtonLabel" => "Add Frascati Keywords",
                             "title" => "Add Keywords from Frascati Taxonomy",
-                            "items" => json_decode(file_get_contents($jsonPath), true)["items"]
+                            "items" => $this->reshapeTree($itemsOriginal)
                         ],
                     ];
                     break; // No need to continue once we found the field
