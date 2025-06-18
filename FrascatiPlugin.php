@@ -47,7 +47,10 @@ class FrascatiPlugin extends GenericPlugin
         return $success;
     }
 
-    public function addVocabularyToKeywordsField($hookName, $args)
+    /**
+     * Add vocabulary data to the keyword field.
+     */
+    public function addVocabularyToKeywordsField(string $hookName, array $args)
     {
 
         $formConfig = &$args[0];
@@ -81,6 +84,8 @@ class FrascatiPlugin extends GenericPlugin
                 }
             }
         }
+
+        return Hook::CONTINUE;
     }
 
 
