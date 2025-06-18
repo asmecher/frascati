@@ -10,31 +10,27 @@
 
 namespace APP\plugins\generic\frascati;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
-
 use APP\core\Application;
+use PKP\controlledVocab\ControlledVocab;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
-use PKP\controlledVocab\ControlledVocab;
-use PKP\controlledVocab\ControlledVocabEntry;
-use PKP\submission\SubmissionKeywordDAO;
 
 class FrascatiPlugin extends GenericPlugin
 {
-
     /**
      * Constants
      */
 
     // Define which vocabularies are supported, and the languages in them
-    const ALLOWED_VOCABS_AND_LANGS = [
+    public const ALLOWED_VOCABS_AND_LANGS = [
         ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_KEYWORD => ['en'],
     ];
 
 
     /**
-     * Public 
+     * Public
+     *
+     * @param null|mixed $mainContextId
      */
 
     // GenericPlugin methods
@@ -51,60 +47,36 @@ class FrascatiPlugin extends GenericPlugin
         return $success;
     }
 
-    /**
-    * Recursively remap a JSON-decoded items-tree so that each node becomes:
-    * [
-    *   'label' => <original name>,
-    *   'value' => <original node minus its 'items'>,
-    *   'items' => [ ...remapped children... ]    // only if there were children
-    * ]
-    *
-    * @param  array  $items  List of nodes
-    * @return array
-    */
-    function reshapeTree(array $items): array
+    public function addVocabularyToKeywordsField($hookName, $args)
     {
-        $result = [];
-        foreach ($items as $node) {
-            // pull out & remove any children
-            $children = $node['items'] ?? [];
-            unset($node['items']);
-    
-            // build the new node
-            $newNode = [
-                'label' => $node['name'],
-                'value' => $node,
-            ];
-    
-            // recurse if needed
-            if (!empty($children)) {
-                $newNode['items'] = $this->reshapeTree($children);
-            }
-    
-            $result[] = $newNode;
-        }
-        return $result;
-    }
 
-     public function addVocabularyToKeywordsField($hookName, $args) {
-
-        $formConfig = $args[0];
-        if ($formConfig["id"] == 'metadata' || $formConfig["id"] == 'titleAbstract') {
+        $formConfig = &$args[0];
+        if ($formConfig['id'] == 'metadata' || $formConfig['id'] == 'titleAbstract') {
             // Find the keywords field
-            foreach ($args[0]["fields"] as $key => $field) {
-                if ($field["name"] == "keywords") {
+            foreach ($formConfig['fields'] as $key => $field) {
+                if ($field['name'] == 'keywords') {
 
-                    // Add the vocabulary field
-                    $jsonPath = dirname(__FILE__) . '/classifications.en.json';
-                    $itemsOriginal= json_decode(file_get_contents($jsonPath), true)["items"];
-                    $args[0]["fields"][$key]["vocabularies"] = [
-                        [
-                            "locale" => "en",
-                            "addButtonLabel" => "Add Frascati Keywords",
-                            "title" => "Add Keywords from Frascati Taxonomy",
-                            "items" => $this->reshapeTree($itemsOriginal)
-                        ],
-                    ];
+                    $vocabularies = [];
+
+                    foreach ($formConfig['supportedFormLocales'] as $locale) {
+                        $localeKey = $locale['key'];
+                        $jsonPath = dirname(__FILE__) . "/classifications.{$localeKey}.json";
+                        if (file_exists($jsonPath)) {
+                            $vocabularyData = json_decode(file_get_contents($jsonPath), true)['items'];
+
+                            $vocabularies[] = [
+                                'locale' => $localeKey,
+                                'addButtonLabel' => __('plugins.generic.frascati.addFrascatiKeywords'),
+                                'modalTitleLabel' => __('plugins.generic.frascati.addFrascatiTitle'),
+                                'items' => $vocabularyData
+                            ];
+                        }
+                    }
+
+                    if (!empty($vocabularies)) {
+                        $formConfig['fields'][$key]['vocabularies'] = $vocabularies;
+                    }
+
                     break; // No need to continue once we found the field
                 }
             }
@@ -146,9 +118,8 @@ class FrascatiPlugin extends GenericPlugin
             return Hook::CONTINUE;
         }
 
-	// Only return suggestions from the vocabulary
+        // Only return suggestions from the vocabulary
         $data = $this->fetchData($term, $locale);
-error_log(print_r($data,true));
         return HOOK::CONTINUE;
     }
 
@@ -157,7 +128,7 @@ error_log(print_r($data,true));
      */
     private function fetchData(?string $term, string $locale): array
     {
-        // You might want to consider sanitazing the search term before it is 
+        // You might want to consider sanitazing the search term before it is
         // passed to an API or used to search within a local file
         $termSanitized = strtolower($term ?? '');
 
@@ -173,11 +144,13 @@ error_log(print_r($data,true));
             foreach ($fieldNode->getElementsByTagName('subfield') as $subfieldNode) {
                 $number = $subfieldNode->getAttribute('number');
                 $name = $subfieldNode->getAttribute('name');
-                if (strpos(strtolower($name), $termSanitized) !== false) $classifications[] = [
-                    'name' => $name,
-                    'source' => 'Frascati',
-                    'identifier' => $number,
-                ];
+                if (strpos(strtolower($name), $termSanitized) !== false) {
+                    $classifications[] = [
+                        'name' => $name,
+                        'source' => 'Frascati',
+                        'identifier' => $number,
+                    ];
+                }
             }
         }
         return $classifications;

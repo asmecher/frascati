@@ -1,72 +1,72 @@
 {
   "items": [
     {
-      "label": "Natural Sciences",
+      "label": "Sciences naturelles",
       "value": {
         "identifier": "1",
-        "name": "Natural Sciences",
+        "name": "Sciences naturelles",
         "source": "Frascati"
       },
       "items": [
         {
-          "label": "Mathematics",
+          "label": "Mathématiques",
           "value": {
             "identifier": "1.1",
-            "name": "Mathematics",
+            "name": "Mathématiques",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Computer and information sciences",
+          "label": "Informatique et sciences de l'information",
           "value": {
             "identifier": "1.2",
-            "name": "Computer and information sciences",
+            "name": "Informatique et sciences de l'information",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Physical sciences",
+          "label": "Sciences physiques",
           "value": {
             "identifier": "1.3",
-            "name": "Physical sciences",
+            "name": "Sciences physiques",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Chemical sciences",
+          "label": "Sciences chimiques",
           "value": {
             "identifier": "1.4",
-            "name": "Chemical sciences",
+            "name": "Sciences chimiques",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Earth and related environmental sciences",
+          "label": "Sciences de la Terre et de l’environnement",
           "value": {
             "identifier": "1.5",
-            "name": "Earth and related environmental sciences",
+            "name": "Sciences de la Terre et de l’environnement",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Biological sciences",
+          "label": "Sciences biologiques",
           "value": {
             "identifier": "1.6",
-            "name": "Biological sciences",
+            "name": "Sciences biologiques",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Other natural sciences",
+          "label": "Autres sciences naturelles",
           "value": {
             "identifier": "1.7",
-            "name": "Other natural sciences",
+            "name": "Autres sciences naturelles",
             "source": "Frascati"
           },
           "selectable": true
@@ -74,108 +74,108 @@
       ]
     },
     {
-      "label": "Engineering and Technology",
+      "label": "Génie et technologie",
       "value": {
         "identifier": "2",
-        "name": "Engineering and Technology",
+        "name": "Génie et technologie",
         "source": "Frascati"
       },
       "items": [
         {
-          "label": "Civil engineering",
+          "label": "Génie civil",
           "value": {
             "identifier": "2.1",
-            "name": "Civil engineering",
+            "name": "Génie civil",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Electrical engineering, electronic engineering, information engineering",
+          "label": "Génie électrique, électronique et de l'information",
           "value": {
             "identifier": "2.2",
-            "name": "Electrical engineering, electronic engineering, information engineering",
+            "name": "Génie électrique, électronique et de l'information",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Mechanical engineering",
+          "label": "Génie mécanique",
           "value": {
             "identifier": "2.3",
-            "name": "Mechanical engineering",
+            "name": "Génie mécanique",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Chemical engineering",
+          "label": "Génie chimique",
           "value": {
             "identifier": "2.4",
-            "name": "Chemical engineering",
+            "name": "Génie chimique",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Materials engineering",
+          "label": "Génie des matériaux",
           "value": {
             "identifier": "2.5",
-            "name": "Materials engineering",
+            "name": "Génie des matériaux",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Medical engineering",
+          "label": "Génie biomédical",
           "value": {
             "identifier": "2.6",
-            "name": "Medical engineering",
+            "name": "Génie biomédical",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Environmental engineering",
+          "label": "Génie de l’environnement",
           "value": {
             "identifier": "2.7",
-            "name": "Environmental engineering",
+            "name": "Génie de l’environnement",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Environmental biotechnology",
+          "label": "Biotechnologie environnementale",
           "value": {
             "identifier": "2.8",
-            "name": "Environmental biotechnology",
+            "name": "Biotechnologie environnementale",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Industrial Biotechnology",
+          "label": "Biotechnologie industrielle",
           "value": {
             "identifier": "2.9",
-            "name": "Industrial Biotechnology",
+            "name": "Biotechnologie industrielle",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Nano-technology",
+          "label": "Nanotechnologie",
           "value": {
             "identifier": "2.10",
-            "name": "Nano-technology",
+            "name": "Nanotechnologie",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Other engineering and technologies",
+          "label": "Autres domaines du génie et technologies",
           "value": {
             "identifier": "2.11",
-            "name": "Other engineering and technologies",
+            "name": "Autres domaines du génie et technologies",
             "source": "Frascati"
           },
           "selectable": true
@@ -183,54 +183,54 @@
       ]
     },
     {
-      "label": "Medical and Health Sciences",
+      "label": "Sciences médicales et de la santé",
       "value": {
         "identifier": "3",
-        "name": "Medical and Health Sciences",
+        "name": "Sciences médicales et de la santé",
         "source": "Frascati"
       },
       "items": [
         {
-          "label": "Basic medicine",
+          "label": "Médecine fondamentale",
           "value": {
             "identifier": "3.1",
-            "name": "Basic medicine",
+            "name": "Médecine fondamentale",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Clinical medicine",
+          "label": "Médecine clinique",
           "value": {
             "identifier": "3.2",
-            "name": "Clinical medicine",
+            "name": "Médecine clinique",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Health sciences",
+          "label": "Sciences de la santé",
           "value": {
             "identifier": "3.3",
-            "name": "Health sciences",
+            "name": "Sciences de la santé",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Health biotechnology",
+          "label": "Biotechnologie de la santé",
           "value": {
             "identifier": "3.4",
-            "name": "Health biotechnology",
+            "name": "Biotechnologie de la santé",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Other medical sciences",
+          "label": "Autres sciences médicales",
           "value": {
             "identifier": "3.5",
-            "name": "Other medical sciences",
+            "name": "Autres sciences médicales",
             "source": "Frascati"
           },
           "selectable": true
@@ -238,54 +238,54 @@
       ]
     },
     {
-      "label": "Agricultural Sciences",
+      "label": "Sciences agricoles",
       "value": {
         "identifier": "4",
-        "name": "Agricultural Sciences",
+        "name": "Sciences agricoles",
         "source": "Frascati"
       },
       "items": [
         {
-          "label": "Agriculture, forestry, and fisheries",
+          "label": "Agriculture, foresterie et pêches",
           "value": {
             "identifier": "4.1",
-            "name": "Agriculture, forestry, and fisheries",
+            "name": "Agriculture, foresterie et pêches",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Animal and dairy science",
+          "label": "Sciences animales et laitières",
           "value": {
             "identifier": "4.2",
-            "name": "Animal and dairy science",
+            "name": "Sciences animales et laitières",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Veterinary science",
+          "label": "Sciences vétérinaires",
           "value": {
             "identifier": "4.3",
-            "name": "Veterinary science",
+            "name": "Sciences vétérinaires",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Agricultural biotechnology",
+          "label": "Biotechnologie agricole",
           "value": {
             "identifier": "4.4",
-            "name": "Agricultural biotechnology",
+            "name": "Biotechnologie agricole",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Other agricultural sciences",
+          "label": "Autres sciences agricoles",
           "value": {
             "identifier": "4.5",
-            "name": "Other agricultural sciences",
+            "name": "Autres sciences agricoles",
             "source": "Frascati"
           },
           "selectable": true
@@ -293,90 +293,90 @@
       ]
     },
     {
-      "label": "Social Sciences",
+      "label": "Sciences sociales",
       "value": {
         "identifier": "5",
-        "name": "Social Sciences",
+        "name": "Sciences sociales",
         "source": "Frascati"
       },
       "items": [
         {
-          "label": "Psychology",
+          "label": "Psychologie",
           "value": {
             "identifier": "5.1",
-            "name": "Psychology",
+            "name": "Psychologie",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Economics and business",
+          "label": "Économie et affaires",
           "value": {
             "identifier": "5.2",
-            "name": "Economics and business",
+            "name": "Économie et affaires",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Educational sciences",
+          "label": "Sciences de l’éducation",
           "value": {
             "identifier": "5.3",
-            "name": "Educational sciences",
+            "name": "Sciences de l’éducation",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Sociology",
+          "label": "Sociologie",
           "value": {
             "identifier": "5.4",
-            "name": "Sociology",
+            "name": "Sociologie",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Law",
+          "label": "Droit",
           "value": {
             "identifier": "5.5",
-            "name": "Law",
+            "name": "Droit",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Political Science",
+          "label": "Science politique",
           "value": {
             "identifier": "5.6",
-            "name": "Political Science",
+            "name": "Science politique",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Social and economic geography",
+          "label": "Géographie sociale et économique",
           "value": {
             "identifier": "5.7",
-            "name": "Social and economic geography",
+            "name": "Géographie sociale et économique",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Media and communications",
+          "label": "Médias et communications",
           "value": {
             "identifier": "5.8",
-            "name": "Media and communications",
+            "name": "Médias et communications",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Other social sciences",
+          "label": "Autres sciences sociales",
           "value": {
             "identifier": "5.9",
-            "name": "Other social sciences",
+            "name": "Autres sciences sociales",
             "source": "Frascati"
           },
           "selectable": true
@@ -384,54 +384,54 @@
       ]
     },
     {
-      "label": "Humanities",
+      "label": "Sciences humaines",
       "value": {
         "identifier": "6",
-        "name": "Humanities",
+        "name": "Sciences humaines",
         "source": "Frascati"
       },
       "items": [
         {
-          "label": "History and archaeology",
+          "label": "Histoire et archéologie",
           "value": {
             "identifier": "6.1",
-            "name": "History and archaeology",
+            "name": "Histoire et archéologie",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Languages and literature",
+          "label": "Langues et littérature",
           "value": {
             "identifier": "6.2",
-            "name": "Languages and literature",
+            "name": "Langues et littérature",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Philosophy, ethics and religion",
+          "label": "Philosophie, éthique et religion",
           "value": {
             "identifier": "6.3",
-            "name": "Philosophy, ethics and religion",
+            "name": "Philosophie, éthique et religion",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Art (arts, history of arts, performing arts, music)",
+          "label": "Arts (arts, histoire de l’art, arts de la scène, musique)",
           "value": {
             "identifier": "6.4",
-            "name": "Art (arts, history of arts, performing arts, music)",
+            "name": "Arts (arts, histoire de l’art, arts de la scène, musique)",
             "source": "Frascati"
           },
           "selectable": true
         },
         {
-          "label": "Other humanities",
+          "label": "Autres sciences humaines",
           "value": {
             "identifier": "6.5",
-            "name": "Other humanities",
+            "name": "Autres sciences humaines",
             "source": "Frascati"
           },
           "selectable": true
