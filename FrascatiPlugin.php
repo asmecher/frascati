@@ -10,31 +10,27 @@
 
 namespace APP\plugins\generic\frascati;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
-
 use APP\core\Application;
+use PKP\controlledVocab\ControlledVocab;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
-use PKP\controlledVocab\ControlledVocab;
-use PKP\controlledVocab\ControlledVocabEntry;
-use PKP\submission\SubmissionKeywordDAO;
 
 class FrascatiPlugin extends GenericPlugin
 {
-
     /**
      * Constants
      */
 
     // Define which vocabularies are supported, and the languages in them
-    const ALLOWED_VOCABS_AND_LANGS = [
+    public const ALLOWED_VOCABS_AND_LANGS = [
         ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_KEYWORD => ['en'],
     ];
 
 
     /**
-     * Public 
+     * Public
+     *
+     * @param null|mixed $mainContextId
      */
 
     // GenericPlugin methods
@@ -45,9 +41,53 @@ class FrascatiPlugin extends GenericPlugin
         if ($success && $this->getEnabled()) {
             // Add hook
             Hook::add('API::vocabs::external', $this->setData(...));
+            Hook::add('Form::config::after', $this->addVocabularyToKeywordsField(...));
+
         }
         return $success;
     }
+
+    /**
+     * Add vocabulary data to the keyword field.
+     */
+    public function addVocabularyToKeywordsField(string $hookName, array $args)
+    {
+
+        $formConfig = &$args[0];
+        if ($formConfig['id'] == 'metadata' || $formConfig['id'] == 'titleAbstract') {
+            // Find the keywords field
+            foreach ($formConfig['fields'] as $key => $field) {
+                if ($field['name'] == 'keywords') {
+
+                    $vocabularies = [];
+
+                    foreach ($formConfig['supportedFormLocales'] as $locale) {
+                        $localeKey = $locale['key'];
+                        $jsonPath = dirname(__FILE__) . "/classifications.{$localeKey}.json";
+                        if (file_exists($jsonPath)) {
+                            $vocabularyData = json_decode(file_get_contents($jsonPath), true)['items'];
+
+                            $vocabularies[] = [
+                                'locale' => $localeKey,
+                                'addButtonLabel' => __('plugins.generic.frascati.addFrascatiKeywords'),
+                                'modalTitleLabel' => __('plugins.generic.frascati.addFrascatiTitle'),
+                                'items' => $vocabularyData
+                            ];
+                        }
+                    }
+
+                    if (!empty($vocabularies)) {
+                        $formConfig['fields'][$key]['vocabularies'] = $vocabularies;
+                    }
+
+                    break; // No need to continue once we found the field
+                }
+            }
+        }
+
+        return Hook::CONTINUE;
+    }
+
 
     public function getDisplayName()
     {
@@ -83,9 +123,8 @@ class FrascatiPlugin extends GenericPlugin
             return Hook::CONTINUE;
         }
 
-	// Only return suggestions from the vocabulary
+        // Only return suggestions from the vocabulary
         $data = $this->fetchData($term, $locale);
-error_log(print_r($data,true));
         return HOOK::CONTINUE;
     }
 
@@ -94,7 +133,7 @@ error_log(print_r($data,true));
      */
     private function fetchData(?string $term, string $locale): array
     {
-        // You might want to consider sanitazing the search term before it is 
+        // You might want to consider sanitazing the search term before it is
         // passed to an API or used to search within a local file
         $termSanitized = strtolower($term ?? '');
 
@@ -110,11 +149,13 @@ error_log(print_r($data,true));
             foreach ($fieldNode->getElementsByTagName('subfield') as $subfieldNode) {
                 $number = $subfieldNode->getAttribute('number');
                 $name = $subfieldNode->getAttribute('name');
-                if (strpos(strtolower($name), $termSanitized) !== false) $classifications[] = [
-                    'name' => $name,
-                    'source' => 'Frascati',
-                    'identifier' => $number,
-                ];
+                if (strpos(strtolower($name), $termSanitized) !== false) {
+                    $classifications[] = [
+                        'name' => $name,
+                        'source' => 'Frascati',
+                        'identifier' => $number,
+                    ];
+                }
             }
         }
         return $classifications;
