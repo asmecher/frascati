@@ -17,10 +17,10 @@ msgstr "Frascati Plugin"
 msgid "plugins.generic.frascati.description"
 msgstr "This plugin adds support for Frascati classifications."
 
-msgid "plugins.generic.frascati.addFrascatiKeywords"
-msgstr "Add Frascati Keywords"
+msgid "plugins.generic.frascati.addFrascatiSubjects"
+msgstr "Add Frascati Subjects"
 
 msgid "plugins.generic.frascati.addFrascatiTitle"
-msgstr "Add Keywords from Frascati Taxonomy"
+msgstr "Add Subjects from Frascati Taxonomy"
 
 

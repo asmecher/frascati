@@ -23,7 +23,7 @@ class FrascatiPlugin extends GenericPlugin
 
     // Define which vocabularies are supported, and the languages in them
     public const ALLOWED_VOCABS_AND_LANGS = [
-        ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_KEYWORD => ['en'],
+        ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_SUBJECT => ['en'],
     ];
 
 
@@ -41,23 +41,23 @@ class FrascatiPlugin extends GenericPlugin
         if ($success && $this->getEnabled()) {
             // Add hook
             Hook::add('API::vocabs::external', $this->setData(...));
-            Hook::add('Form::config::after', $this->addVocabularyToKeywordsField(...));
+            Hook::add('Form::config::after', $this->addVocabularyToSubjectsField(...));
 
         }
         return $success;
     }
 
     /**
-     * Add vocabulary data to the keyword field.
+     * Add vocabulary data to the subjects field.
      */
-    public function addVocabularyToKeywordsField(string $hookName, array $args)
+    public function addVocabularyToSubjectsField(string $hookName, array $args)
     {
 
         $formConfig = &$args[0];
         if ($formConfig['id'] == 'metadata' || $formConfig['id'] == 'titleAbstract') {
-            // Find the keywords field
+            // Find the subjects field
             foreach ($formConfig['fields'] as $key => $field) {
-                if ($field['name'] == 'keywords') {
+                if ($field['name'] == 'subjects') {
 
                     $vocabularies = [];
 
@@ -69,7 +69,7 @@ class FrascatiPlugin extends GenericPlugin
 
                             $vocabularies[] = [
                                 'locale' => $localeKey,
-                                'addButtonLabel' => __('plugins.generic.frascati.addFrascatiKeywords'),
+                                'addButtonLabel' => __('plugins.generic.frascati.addFrascatiSubjects'),
                                 'modalTitleLabel' => __('plugins.generic.frascati.addFrascatiTitle'),
                                 'items' => $vocabularyData
                             ];
@@ -117,7 +117,7 @@ class FrascatiPlugin extends GenericPlugin
         // Here we define which form field the plugin is triggered in.
         // You can also define the language is the specific field while some vocabularies might only work
         // with specific languages.
-        // Note that the current development version of the core only supports extending Keywords.
+        // Note that the current development version of the core only supports extending Subjects.
         // However, this will be extended to other fields as well, like Discipline.
         if (!isset(self::ALLOWED_VOCABS_AND_LANGS[$vocab]) || !in_array($locale, self::ALLOWED_VOCABS_AND_LANGS[$vocab])) {
             return Hook::CONTINUE;
