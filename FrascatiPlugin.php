@@ -69,7 +69,7 @@ class FrascatiPlugin extends GenericPlugin
                                 }
                             }
                         }
-                        $json['body']['frascatiBases'] = array_unique($frascatiBases);
+                        $json['body']['frascatiBases'] = array_values(array_unique($frascatiBases));
                     }
                     return Hook::CONTINUE;
                 });
