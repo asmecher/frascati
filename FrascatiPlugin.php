@@ -11,9 +11,15 @@
 namespace APP\plugins\generic\frascati;
 
 use APP\core\Application;
+use APP\core\Request;
 use PKP\controlledVocab\ControlledVocab;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
+use Laravel\Scout\Builder;
+use PKP\config\Config;
+use APP\submission\Submission;
+use APP\facades\Repo;
+use PKP\facades\Locale;
 
 class FrascatiPlugin extends GenericPlugin
 {
@@ -34,17 +40,71 @@ class FrascatiPlugin extends GenericPlugin
      */
 
     // GenericPlugin methods
-
     public function register($category, $path, $mainContextId = null)
     {
         $success = parent::register($category, $path);
-        if ($success && $this->getEnabled()) {
-            // Add hook
-            Hook::add('API::vocabs::external', $this->setData(...));
-            Hook::add('Form::config::after', $this->addVocabularyToSubjectsField(...));
+        if ($success) {
+            if ($this->getEnabled($mainContextId)) {
+                // Add hooks for data model
+                Hook::add('API::vocabs::external', $this->setData(...));
+                Hook::add('Form::config::after', $this->addVocabularyToSubjectsField(...));
+            }
+
+            if (Config::getVar('search', 'driver') == 'opensearch') {
+                // Index Frascati roots for faceted browsing when using OpenSearch
+                Hook::add('OpenSearchEngine::update', function(string $hookName, array &$json, Submission $submission) {
+                    if ($this->getEnabledForContextId($submission->getData('contextId'))) {
+                        $subjects = Repo::controlledVocab()->getBySymbolic(
+                            ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_SUBJECT,
+                            Application::ASSOC_TYPE_PUBLICATION,
+                            $submission->getCurrentPublication()->getId(),
+                            [Locale::getLocale(), $submission->getData('locale'), Locale::getPrimaryLocale()]
+                        );
+                        $frascatiData = $this->getFrascatiData(Locale::getLocale());
+                        $frascatiBases = [];
+                        foreach ($frascatiData as $base) {
+                            foreach ($base['items'] as $subheading) {
+                                if (in_array($subheading['label'], $subjects['en'] ?? [])) {
+                                    $frascatiBases[] = $base['label'];
+                                }
+                            }
+                        }
+                        $json['body']['frascatiBases'] = array_unique($frascatiBases);
+                    }
+                    return Hook::CONTINUE;
+                });
+                Hook::add('SearchHandler::search::builder', function(string $hookName, Builder $builder, Request $request) {
+                    $context = $request->getContext();
+                    if ($context && $this->getEnabledForContextId($context->getId())) {
+                        $builder->whereIn('frascatiBases', $request->getUserVar('frascatiBases'));
+                    }
+                });
+                Hook::add('OpenSearchEngine::buildQuery', function(string $hookName, array &$query, array &$filter, Builder $builder, Builder $originalBuilder) {
+                    if ($originalBuilder->wheres['contextId'] && $this->getEnabledForContextId($originalBuilder->wheres['contextId'])) {
+                        $frascatiBases = $builder->whereIns['frascatiBases'] ?? [];
+                        if (!empty($frascatiBases)) {
+                            $filter[] = ['terms' => ['frascatiBases.keyword' => $frascatiBases]];
+                        }
+                        unset($builder->whereIns['frascatiBases']);
+                    }
+                    return Hook::CONTINUE;
+                });
+            }
 
         }
         return $success;
+    }
+
+    protected function getFrascatiData(string $locale) : array
+    {
+        $jsonPath = dirname(__FILE__) . "/classifications.{$locale}.json";
+        if (file_exists($jsonPath)) {
+            return json_decode(file_get_contents($jsonPath), true)['items'];
+        }
+
+        // Fall back on English if the locale-specific file doesn't exist
+        $jsonPath = dirname(__FILE__) . "/classifications.en.json";
+        return json_decode(file_get_contents($jsonPath), true)['items'];
     }
 
     /**
@@ -63,17 +123,14 @@ class FrascatiPlugin extends GenericPlugin
 
                     foreach ($formConfig['supportedFormLocales'] as $locale) {
                         $localeKey = $locale['key'];
-                        $jsonPath = dirname(__FILE__) . "/classifications.{$localeKey}.json";
-                        if (file_exists($jsonPath)) {
-                            $vocabularyData = json_decode(file_get_contents($jsonPath), true)['items'];
 
-                            $vocabularies[] = [
-                                'locale' => $localeKey,
-                                'addButtonLabel' => __('plugins.generic.frascati.addFrascatiSubjects'),
-                                'modalTitleLabel' => __('plugins.generic.frascati.addFrascatiTitle'),
-                                'items' => $vocabularyData
-                            ];
-                        }
+                        $vocabularyData = $this->getFrascatiData($localeKey);
+                        $vocabularies[] = [
+                            'locale' => $localeKey,
+                            'addButtonLabel' => __('plugins.generic.frascati.addFrascatiSubjects'),
+                            'modalTitleLabel' => __('plugins.generic.frascati.addFrascatiTitle'),
+                            'items' => $vocabularyData
+                        ];
                     }
 
                     if (!empty($vocabularies)) {
@@ -122,7 +179,6 @@ class FrascatiPlugin extends GenericPlugin
         if (!isset(self::ALLOWED_VOCABS_AND_LANGS[$vocab]) || !in_array($locale, self::ALLOWED_VOCABS_AND_LANGS[$vocab])) {
             return Hook::CONTINUE;
         }
-
         // Only return suggestions from the vocabulary
         $data = $this->fetchData($term, $locale);
         return HOOK::CONTINUE;
@@ -145,6 +201,7 @@ class FrascatiPlugin extends GenericPlugin
         $doc = new \DOMDocument();
         $doc->load(dirname(__FILE__) . '/classifications.xml');
         $classifications = [];
+
         foreach ($doc->getElementsByTagName('field') as $fieldNode) {
             foreach ($fieldNode->getElementsByTagName('subfield') as $subfieldNode) {
                 $number = $subfieldNode->getAttribute('number');
@@ -159,5 +216,10 @@ class FrascatiPlugin extends GenericPlugin
             }
         }
         return $classifications;
+    }
+
+    function getEnabledForContextId(int $contextId) {
+        static $enabledStates = [];
+        return $enabledStates[$contextId] ??= $this->getSetting($contextId, 'enabled');
     }
 }
