@@ -114,7 +114,7 @@ class FrascatiPlugin extends GenericPlugin
     {
 
         $formConfig = &$args[0];
-        if ($formConfig['id'] == 'metadata' || $formConfig['id'] == 'titleAbstract') {
+        if ($formConfig['id'] == 'metadata' || $formConfig['id'] == 'forTheEditors') {
             // Find the subjects field
             foreach ($formConfig['fields'] as $key => $field) {
                 if ($field['name'] == 'subjects') {
