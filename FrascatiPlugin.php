@@ -23,6 +23,7 @@ use PKP\facades\Locale;
 
 class FrascatiPlugin extends GenericPlugin
 {
+    public array $frascatiBasis = [];
     /**
      * Constants
      */
@@ -73,10 +74,21 @@ class FrascatiPlugin extends GenericPlugin
                     }
                     return Hook::CONTINUE;
                 });
+                Hook::add('LoadHandler', function(string $hookName, array $args) {
+                    $page = &$args[0];
+                    $op = &$args[1];
+                    $handler = &$args[3];
+                    if ($page != 'search' || $op != 'frascati') return Hook::CONTINUE;
+                    $op = 'index';
+                    $request = Application::get()->getRequest();
+                    $requestedArgs = $request->getRequestedArgs();
+                    $this->frascatiBases = $requestedArgs[0] ? [$requestedArgs[0]] : [];
+                    return Hook::CONTINUE;
+                });
                 Hook::add('SearchHandler::search::builder', function(string $hookName, Builder $builder, Request $request) {
                     $context = $request->getContext();
                     if ($context && $this->getEnabledForContextId($context->getId())) {
-                        $builder->whereIn('frascatiBases', $request->getUserVar('frascatiBases'));
+                        $builder->whereIn('frascatiBases', array_merge($this->frascatiBases, (array) $request->getUserVar('frascatiBases')));
                     }
                 });
                 Hook::add('OpenSearchEngine::buildQuery', function(string $hookName, array &$query, array &$filter, Builder $builder, Builder $originalBuilder) {
