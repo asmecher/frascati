@@ -23,4 +23,11 @@ msgstr "Add Frascati Subjects"
 msgid "plugins.generic.frascati.addFrascatiTitle"
 msgstr "Add Subjects from Frascati Taxonomy"
 
+msgid "plugins.generic.frascati.settings.description"
+msgstr "The following settings apply to the Frascati classifications that may be entered by the author or editor, depending on the configuration of the Subjects field in Settings &gt; Workflow &gt; Metadata."
 
+msgid "plugins.generic.frascati.settings.requiredFrascatiClasses"
+msgstr "The number of required Frascati classifications for a submission (or 0 for no requirement)."
+
+msgid "plugins.generic.frascati.requiredFrascatiClassesNotMet"
+msgstr "Not enough Frascati classifications were specified. At least {$requiredFrascatiClasses} classes are required."

@@ -20,6 +20,10 @@ use PKP\config\Config;
 use APP\submission\Submission;
 use APP\facades\Repo;
 use PKP\facades\Locale;
+use PKP\core\JSONMessage;
+use PKP\linkAction\LinkAction;
+use PKP\linkAction\request\AjaxModal;
+use APP\template\TemplateManager;
 
 class FrascatiPlugin extends GenericPlugin
 {
@@ -49,6 +53,7 @@ class FrascatiPlugin extends GenericPlugin
                 // Add hooks for data model
                 Hook::add('API::vocabs::external', $this->setData(...));
                 Hook::add('Form::config::after', $this->addVocabularyToSubjectsField(...));
+                Hook::add('Submission::validateSubmit', $this->addSubmissionChecks(...));
             }
 
             if (Config::getVar('search', 'driver') == 'opensearch') {
@@ -157,6 +162,34 @@ class FrascatiPlugin extends GenericPlugin
         return Hook::CONTINUE;
     }
 
+    /**
+     * Handle the Submission::validateSubmit check to add potential requirements for submission.
+     */
+    function addSubmissionChecks(string $hookName, array $args) {
+        $errors =& $args[0];
+        $submission = $args[1];
+        $context = $args[2];
+
+        // Make sure there is a specified requirement for number of classes, and that the field is required on submission.
+        $requiredFrascatiClasses = $this->getSetting($context->getId(), 'requiredFrascatiClasses');
+        $subjectsRequirement = $context->getData('subjects');
+        if (!$requiredFrascatiClasses || !in_array($subjectsRequirement, [$context::METADATA_REQUEST, $context::METADATA_REQUIRE])) return Hook::CONTINUE;
+
+        $subjectCount = 0;
+        foreach ($submission->getCurrentPublication()->getData('subjects') as $language => $subjects) {
+            $frascatiData = $this->getFrascatiData($language);
+            foreach ($frascatiData as $baseHeadings) {
+                foreach ($baseHeadings['items'] as $subHeading) {
+                    if (in_array($subHeading['label'], $subjects)) $subjectCount++;
+                } 
+            }
+        }
+        if ($subjectCount < $requiredFrascatiClasses) {
+            $errors['subjects'][Locale::getLocale()][Locale::getLocale()] = __('plugins.generic.frascati.requiredFrascatiClassesNotMet', ['requiredFrascatiClasses' => $requiredFrascatiClasses]);
+        }
+
+        return Hook::CONTINUE;
+    }
 
     public function getDisplayName()
     {
@@ -233,5 +266,54 @@ class FrascatiPlugin extends GenericPlugin
     function getEnabledForContextId(int $contextId) {
         static $enabledStates = [];
         return $enabledStates[$contextId] ??= $this->getSetting($contextId, 'enabled');
+    }
+
+    /**
+     * @copydoc Plugin::getActions()
+     */
+    public function getActions($request, $verb)
+    {
+        $router = $request->getRouter();
+        return array_merge(
+            $this->getEnabled() ? [
+                new LinkAction(
+                    'settings',
+                    new AjaxModal(
+                        $router->url($request, null, null, 'manage', null, ['verb' => 'settings', 'plugin' => $this->getName(), 'category' => 'generic']),
+                        $this->getDisplayName()
+                    ),
+                    __('manager.plugins.settings'),
+                    null
+                ),
+            ] : [],
+            parent::getActions($request, $verb)
+        );
+    }
+
+    /**
+     * @copydoc Plugin::manage()
+     */
+    public function manage($args, $request)
+    {
+        switch ($request->getUserVar('verb')) {
+            case 'settings':
+                $context = $request->getContext();
+                $templateMgr = TemplateManager::getManager($request);
+                $templateMgr->registerPlugin('function', 'plugin_url', $this->smartyPluginUrl(...));
+
+                $form = new FrascatiSettingsForm($this, $context->getId());
+
+                if ($request->getUserVar('save')) {
+                    $form->readInputData();
+                    if ($form->validate()) {
+                        $form->execute();
+                        return new JSONMessage(true);
+                    }
+                } else {
+                    $form->initData();
+                }
+                return new JSONMessage(true, $form->fetch($request));
+        }
+        return parent::manage($args, $request);
     }
 }
