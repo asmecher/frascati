@@ -90,7 +90,7 @@ class FrascatiPlugin extends GenericPlugin
                     $this->frascatiBases = $requestedArgs[0] ? [$requestedArgs[0]] : [];
                     return Hook::CONTINUE;
                 });
-                Hook::add('SearchHandler::search::builder', function(string $hookName, Builder $builder, Request $request) {
+                Hook::add('SubmissionSearchResult::builderFromRequest', function(string $hookName, Builder $builder, Request $request) {
                     $context = $request->getContext();
                     if ($context && $this->getEnabledForContextId($context->getId())) {
                         $builder->whereIn('frascatiBases', array_merge($this->frascatiBases, (array) $request->getUserVar('frascatiBases')));
