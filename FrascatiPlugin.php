@@ -27,11 +27,11 @@ use APP\template\TemplateManager;
 
 class FrascatiPlugin extends GenericPlugin
 {
-    public array $frascatiBasis = [];
+    public array $frascatiBases = [];
+
     /**
      * Constants
      */
-
     // Define which vocabularies are supported, and the languages in them
     public const ALLOWED_VOCABS_AND_LANGS = [
         ControlledVocab::CONTROLLED_VOCAB_SUBMISSION_SUBJECT => ['en'],
@@ -90,13 +90,13 @@ class FrascatiPlugin extends GenericPlugin
                     $this->frascatiBases = $requestedArgs[0] ? [$requestedArgs[0]] : [];
                     return Hook::CONTINUE;
                 });
-                Hook::add('SearchHandler::search::builder', function(string $hookName, Builder $builder, Request $request) {
+                Hook::add('SubmissionSearchResult::builderFromRequest', function(string $hookName, Builder $builder, Request $request) {
                     $context = $request->getContext();
                     if ($context && $this->getEnabledForContextId($context->getId())) {
                         $builder->whereIn('frascatiBases', array_merge($this->frascatiBases, (array) $request->getUserVar('frascatiBases')));
                     }
                 });
-                Hook::add('OpenSearchEngine::buildQuery', function(string $hookName, array &$query, array &$filter, Builder $builder, Builder $originalBuilder) {
+                Hook::add('OpenSearchEngine::buildQuery', function(string $hookName, array &$query, array &$filter, array &$sort, Builder $builder, Builder $originalBuilder) {
                     if ($originalBuilder->wheres['contextId'] && $this->getEnabledForContextId($originalBuilder->wheres['contextId'])) {
                         $frascatiBases = $builder->whereIns['frascatiBases'] ?? [];
                         if (!empty($frascatiBases)) {
