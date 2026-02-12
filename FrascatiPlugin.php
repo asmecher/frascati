@@ -66,11 +66,12 @@ class FrascatiPlugin extends GenericPlugin
                             $submission->getCurrentPublication()->getId(),
                             [Locale::getLocale(), $submission->getData('locale'), Locale::getPrimaryLocale()]
                         );
+                        $subjects = array_map(fn($s) => $s['name'], $subjects['en'] ?? []);
                         $frascatiData = $this->getFrascatiData(Locale::getLocale());
                         $frascatiBases = [];
                         foreach ($frascatiData as $base) {
                             foreach ($base['items'] as $subheading) {
-                                if (in_array($subheading['label'], $subjects['en'] ?? [])) {
+                                if (in_array($subheading['label'], $subjects)) {
                                     $frascatiBases[] = $base['label'];
                                 }
                             }
