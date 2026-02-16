@@ -31,3 +31,12 @@ msgstr "The number of required Frascati classifications for a submission (or 0 f
 
 msgid "plugins.generic.frascati.requiredFrascatiClassesNotMet"
 msgstr "Not enough Frascati classifications were specified. At least {$requiredFrascatiClasses} classes are required."
+
+msgid "plugins.generic.frascati.navMenuItem"
+msgstr "Frascati Category"
+
+msgid "plugins.generic.frascati.navMenuItem.description"
+msgstr "A link to search results filtered by a Frascati classification category."
+
+msgid "plugins.generic.frascati.navMenuItem.category"
+msgstr "Frascati Category"
