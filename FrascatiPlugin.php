@@ -94,8 +94,9 @@ class FrascatiPlugin extends GenericPlugin
                             PKPApplication::ROUTE_PAGE,
                             null,
                             'search',
-                            'frascati',
-                            [$frascatiBase]
+                            null,
+                            null,
+                            ['frascatiBases' => [$frascatiBase]],
                         ));
                     }
                 });
