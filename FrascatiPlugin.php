@@ -13,7 +13,6 @@ namespace APP\plugins\generic\frascati;
 use APP\core\Application;
 use APP\core\Request;
 use PKP\controlledVocab\ControlledVocab;
-use PKP\core\PKPApplication;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 use Laravel\Scout\Builder;
@@ -56,50 +55,6 @@ class FrascatiPlugin extends GenericPlugin
                 Hook::add('Form::config::after', $this->addVocabularyToSubjectsField(...));
                 Hook::add('Submission::validateSubmit', $this->addSubmissionChecks(...));
 
-                // Navigation menu item type for Frascati category links
-                Hook::add('NavigationMenus::itemTypes', function ($hookName, $args) {
-                    $types = &$args[0];
-                    $types['NMI_TYPE_FRASCATI'] = [
-                        'title' => __('plugins.generic.frascati.navMenuItem'),
-                        'description' => __('plugins.generic.frascati.navMenuItem.description'),
-                    ];
-                });
-
-                Hook::add('NavigationMenus::itemCustomTemplates', function ($hookName, $args) {
-                    $templates = &$args[0];
-                    $templates['NMI_TYPE_FRASCATI'] = [
-                        'template' => $this->getTemplateResource('frascatiNMIType.tpl'),
-                    ];
-
-                    $frascatiData = $this->getFrascatiData('en');
-                    $categories = ['' => __('common.chooseOne')];
-                    foreach ($frascatiData as $base) {
-                        $categories[$base['label']] = $base['label'];
-                    }
-                    $templateMgr = TemplateManager::getManager(Application::get()->getRequest());
-                    $templateMgr->assign('frascatiCategories', $categories);
-                });
-
-                Hook::add('NavigationMenus::displaySettings', function ($hookName, $args) {
-                    $nmi = &$args[0];
-                    if ($nmi->getType() !== 'NMI_TYPE_FRASCATI') {
-                        return Hook::CONTINUE;
-                    }
-                    $request = Application::get()->getRequest();
-                    $dispatcher = $request->getDispatcher();
-                    $frascatiBase = $nmi->getPath();
-                    if ($frascatiBase) {
-                        $nmi->setUrl($dispatcher->url(
-                            $request,
-                            PKPApplication::ROUTE_PAGE,
-                            null,
-                            'search',
-                            null,
-                            null,
-                            ['frascatiBases' => [$frascatiBase]],
-                        ));
-                    }
-                });
             }
 
             if (Config::getVar('search', 'driver') == 'opensearch') {
