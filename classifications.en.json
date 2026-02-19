@@ -1,10 +1,10 @@
 {
   "items": [
     {
-      "label": "Natural Sciences",
+      "label": "Natural sciences",
       "value": {
         "identifier": "1",
-        "name": "Natural Sciences",
+        "name": "Natural sciences",
         "source": "Frascati"
       },
       "items": [
@@ -74,10 +74,10 @@
       ]
     },
     {
-      "label": "Engineering and Technology",
+      "label": "Engineering and technology",
       "value": {
         "identifier": "2",
-        "name": "Engineering and Technology",
+        "name": "Engineering and technology",
         "source": "Frascati"
       },
       "items": [
@@ -183,10 +183,10 @@
       ]
     },
     {
-      "label": "Medical and Health Sciences",
+      "label": "Medical and health sciences",
       "value": {
         "identifier": "3",
-        "name": "Medical and Health Sciences",
+        "name": "Medical and health sciences",
         "source": "Frascati"
       },
       "items": [
@@ -238,10 +238,10 @@
       ]
     },
     {
-      "label": "Agricultural Sciences",
+      "label": "Agricultural and veterinary sciences",
       "value": {
         "identifier": "4",
-        "name": "Agricultural Sciences",
+        "name": "Agricultural and veterinary sciences",
         "source": "Frascati"
       },
       "items": [
@@ -293,10 +293,10 @@
       ]
     },
     {
-      "label": "Social Sciences",
+      "label": "Social sciences",
       "value": {
         "identifier": "5",
-        "name": "Social Sciences",
+        "name": "Social sciences",
         "source": "Frascati"
       },
       "items": [
@@ -384,10 +384,10 @@
       ]
     },
     {
-      "label": "Humanities",
+      "label": "Humanities and the arts",
       "value": {
         "identifier": "6",
-        "name": "Humanities",
+        "name": "Humanities and the arts",
         "source": "Frascati"
       },
       "items": [
