@@ -225,6 +225,7 @@ class FrascatiPlugin extends GenericPlugin
         $subjectCount = 0;
         foreach ($submission->getCurrentPublication()->getData('subjects') as $language => $subjects) {
             $frascatiData = $this->getFrascatiData($language);
+            $subjects = array_map(fn($subject) => $subject['name'], $subjects);
             foreach ($frascatiData as $baseHeadings) {
                 foreach ($baseHeadings['items'] as $subHeading) {
                     if (in_array($subHeading['label'], $subjects)) $subjectCount++;
