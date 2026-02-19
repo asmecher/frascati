@@ -145,8 +145,8 @@ class FrascatiPlugin extends GenericPlugin
                 });
                 Hook::add('OpenSearchEngine::buildQuery', function(string $hookName, array &$query, array &$filter, array &$sort, Builder $builder, Builder $originalBuilder) {
                     if ($originalBuilder->wheres['contextId'] && $this->getEnabledForContextId($originalBuilder->wheres['contextId'])) {
-                        $frascatiBases = $builder->whereIns['frascatiBases'] ?? [];
-                        if (!empty($frascatiBases)) {
+                        $frascatiBases = array_filter($builder->whereIns['frascatiBases'] ?? []);
+                        if (count($frascatiBases)) {
                             $filter[] = ['terms' => ['frascatiBases.keyword' => $frascatiBases]];
                         }
                         unset($builder->whereIns['frascatiBases']);
